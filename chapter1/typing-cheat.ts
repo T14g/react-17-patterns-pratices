@@ -21,10 +21,10 @@ type TWork2 =
   | { company: string; position: string }
   | { name: string; age: number };
 
-class Person3 implements TWork2 {
-  company: "Google";
-  position: "Senior Dev";
-}
+// class Person3 implements TWork2 {
+//   company: "Google";
+//   position: "Senior Dev";
+// }
 
 // You can Merge interfaces, IT CAN BE DEFINED MULTIPLE TIMES AND WILL BE TREATED AS A SINGLE INTERFACE
 
