@@ -11,3 +11,5 @@ New tech x staying safe
 Ts naming pratices :
 Iuser = good pratice
 Tuser = Good pratice
+
+Atributo sem true ou false => default em true
