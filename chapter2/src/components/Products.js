@@ -11,6 +11,14 @@ const Products = () => {
   const [filterOne, setFilterOne] = useState("");
   const [filterTwo, setFilterTwo] = useState("");
 
+  const getProductName = (id) => {
+    fetch(TRAY_URL + "/" + id)
+      .then((result) => result.json())
+      .then((data) => {
+        return data.Product.name;
+      });
+  };
+
   const fetchProducts = () => {
     let url = VARIANTS_URL;
     let params = {};
@@ -32,7 +40,20 @@ const Products = () => {
       fetch(url)
         .then((result) => result.json())
         .then((data) => {
-          setProductsList(data.Variants);
+          const { Variants } = data;
+          const urls = [];
+
+          Variants.forEach((variant) => {
+            urls.push(TRAY_URL + "/" + variant.id);
+          });
+
+          Promise.all(
+            urls.map((url) => fetch(url).then((result) => result.json()))
+          ).then((data) => {
+            console.log(data);
+          });
+
+          // setProductsList(data.Variants);
         });
     } else {
       console.log("error");
@@ -55,8 +76,6 @@ const Products = () => {
   console.log(productsList);
   const loadMore = () => {
     let params = {};
-    params["page"] = currentPage + 1;
-    params["limit"] = "100";
     let url = VARIANTS_URL;
 
     if (filterOne !== "") {
@@ -70,6 +89,8 @@ const Products = () => {
         url += `?type_2=Comprimento&value_2=${filterTwo}`;
       }
     }
+
+    url += `&page=${currentPage + 1}`;
 
     if (filterOne !== "" || filterTwo !== "") {
       fetch(url)
@@ -97,7 +118,11 @@ const Products = () => {
       <ProductsStyles>
         {productsList.length > 0 &&
           productsList.map((item) => (
-            <Product imgSrc={item.Variant.VariantImage[0]?.https} name={""} />
+            <Product
+              imgSrc={item.Variant.VariantImage[0]?.https}
+              name={""}
+              url={item.Variant.url.https}
+            />
           ))}
       </ProductsStyles>
       {productsList.length > 0 && <button onClick={loadMore}>Load More</button>}

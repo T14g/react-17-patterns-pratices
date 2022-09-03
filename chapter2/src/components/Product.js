@@ -2,11 +2,13 @@ import React from "react";
 
 import { ProductStyles } from "./styles";
 
-const Product = ({ name, imgSrc }) => {
+const Product = ({ name, imgSrc, url }) => {
   return (
     <ProductStyles>
-      <img src={imgSrc} />
-      <div>{name}</div>
+      <a href={url} target="_blank">
+        <img src={imgSrc} />
+        <div>{name}</div>
+      </a>
     </ProductStyles>
   );
 };
