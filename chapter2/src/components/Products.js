@@ -42,18 +42,46 @@ const Products = () => {
         .then((data) => {
           const { Variants } = data;
           const urls = [];
+          const productsFiltered = [];
+          const prods = [];
+          setProductsList(Variants);
+          console.log(Variants);
 
           Variants.forEach((variant) => {
-            urls.push(TRAY_URL + "/" + variant.id);
+            let item = {};
+            item.prod_id = variant.Variant.product_id;
+            item.img = variant.Variant.VariantImage[0]?.https;
+            item.name = "";
+            item.url = variant.Variant.url.https;
+            prods.push(item);
           });
 
+          prods.forEach((prod) => {
+            urls.push(TRAY_URL + "/" + prod.prod_id);
+          });
+
+          //       Variants.forEach((variant) => {
+          //         urls.push(TRAY_URL + "/" + variant.Variant.id);
+          //       });
+
+          //       console.log(urls);
           Promise.all(
-            urls.map((url) => fetch(url).then((result) => result.json()))
+            urls.map((url) =>
+              fetch(url).then((result) => {
+                return result.json();
+              })
+            )
           ).then((data) => {
-            console.log(data);
+            data.forEach((prod) => {
+              prods.forEach((p) => {
+                if (p.prod_id === prod.Product.id) {
+                  p.name = prod.Product.name;
+                }
+              });
+            });
           });
 
-          // setProductsList(data.Variants);
+          console.log(prods);
         });
     } else {
       console.log("error");
@@ -73,7 +101,7 @@ const Products = () => {
       });
   };
 
-  console.log(productsList);
+  // console.log(productsList);
   const loadMore = () => {
     let params = {};
     let url = VARIANTS_URL;
@@ -106,6 +134,7 @@ const Products = () => {
     }
   };
 
+  console.log(productsList);
   return (
     <div>
       <h1>Lista de produtos</h1>
