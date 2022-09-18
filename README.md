@@ -1,5 +1,5 @@
 # react-17-patterns-pratices
-
+1
 -Basicamente só é necessário a lib React e a lib React-DOM
 -Separar por domínio e funcionalidades
 -Package manager só quando for necessário dependências externas para operações complexas
