@@ -32,3 +32,15 @@ const myArr2 = [1, 2];
 const result1 = add3Contact(myArr2); // [1, 2, 3]
 const result2 = add3Contact(myArr2); // [1, 2, 3]
 
+// Currying convert a function that takes multiple arguments into a function into
+// a function with one argument at time and returning another function
+// the first value is stored
+// after the application of the first parameter, we
+//  can reuse the second function multiple times.
+
+// const addNoCurrying = (x, y) => x + y
+const addCurrying = (x = (y) => x + y);
+
+const add1 = addCurrying(1);
+const resultAdd1 = add1(2); // 3
+const resultAdd2 = add1(3); // 4
