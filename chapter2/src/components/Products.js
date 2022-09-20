@@ -3,7 +3,7 @@ import { TRAY_URL, VARIANTS_URL } from "../../config";
 import Filter from "./Filter";
 import Product from "../components/Product";
 
-import { ProductsStyles } from "./styles";
+import { ProductsStyles, Container } from "./styles";
 
 const Products = () => {
   const [productsList, setProductsList] = useState([]);
@@ -12,60 +12,66 @@ const Products = () => {
   const [filterTwo, setFilterTwo] = useState("");
   const [filterThree, setFilterThree] = useState("");
 
-  const getProductName = (id) => {
-    fetch(TRAY_URL + "/" + id)
-      .then((result) => result.json())
-      .then((data) => {
-        return data.Product.name;
-      });
-  };
-
-  const fetchProducts = () => {
+  const getURL = () => {
     let url = VARIANTS_URL;
-    let params = {};
-    params["limit"] = "10";
-
-    if (filterOne !== "") {
-      url += `?type_1=Largura&value_1=${filterOne}`;
-
-      if (filterTwo !== "") {
-        url += `&type_2=Comprimento&value_2=${filterTwo}`;
-      }
+    if (filterThree !== "") {
+      url += `?type_1=Diametro&value_1=${filterThree}`;
     } else {
-      if (filterTwo !== "") {
-        url += `?type_2=Comprimento&value_2=${filterTwo}`;
+      if (filterOne !== "") {
+        url += `?type_1=Largura&value_1=${filterOne}`;
+
+        if (filterTwo !== "") {
+          url += `&type_2=Comprimento&value_2=${filterTwo}`;
+        }
+      } else {
+        if (filterTwo !== "") {
+          url += `?type_2=Comprimento&value_2=${filterTwo}`;
+        }
       }
     }
 
-    if (filterOne !== "" || filterTwo !== "") {
-      fetch(url)
+    return url;
+  };
+
+  const validation = () =>
+    filterOne !== "" || filterTwo !== "" || filterThree !== "";
+
+  const getProductList = (data) => {
+    const prods = [];
+
+    data.forEach((variant) => {
+      let item = {};
+      item.prod_id = variant.Variant.product_id;
+      item.img = variant.Variant.VariantImage[0]?.https;
+      item.name = "";
+      item.url = variant.Variant.url.https;
+      item.price = variant.Variant.price;
+      prods.push(item);
+    });
+
+    return prods;
+  };
+
+  const getParentsURLS = (data) => {
+    const urls = [];
+
+    data.forEach((prod) => {
+      urls.push(TRAY_URL + "/" + prod.prod_id);
+    });
+
+    return urls;
+  };
+
+  const fetchProducts = () => {
+    if (validation()) {
+      fetch(getURL())
         .then((result) => result.json())
         .then((data) => {
           const { Variants } = data;
-          const urls = [];
-          const productsFiltered = [];
-          const prods = [];
+          const prods = getProductList(Variants);
+          const urls = getParentsURLS(prods);
           setProductsList(Variants);
-          console.log(Variants);
 
-          Variants.forEach((variant) => {
-            let item = {};
-            item.prod_id = variant.Variant.product_id;
-            item.img = variant.Variant.VariantImage[0]?.https;
-            item.name = "";
-            item.url = variant.Variant.url.https;
-            prods.push(item);
-          });
-
-          prods.forEach((prod) => {
-            urls.push(TRAY_URL + "/" + prod.prod_id);
-          });
-
-          //       Variants.forEach((variant) => {
-          //         urls.push(TRAY_URL + "/" + variant.Variant.id);
-          //       });
-
-          //       console.log(urls);
           Promise.all(
             urls.map((url) =>
               fetch(url).then((result) => {
@@ -75,9 +81,7 @@ const Products = () => {
           ).then((data) => {
             data.forEach((prod) => {
               prods.forEach((p) => {
-                // console.log(prod);
                 if (p.prod_id === prod.Product.id) {
-                  // console.log("achou");
                   p.name = prod.Product.name;
                 }
               });
@@ -92,136 +96,84 @@ const Products = () => {
     }
   };
 
-  const fetchVariants = ({}) => {
-    let params = {};
-    params["limit"] = "10";
-
-    fetch(TRAY_URL, {
-      data: params,
-    })
-      .then((result) => result.json())
-      .then((data) => {
-        setProductsList(data?.Products);
-      });
-  };
-
-  // console.log(productsList);
   const loadMore = () => {
-    let url = VARIANTS_URL;
-
-    if (filterOne !== "") {
-      url += `?type_1=Largura&value_1=${filterOne}`;
-
-      if (filterTwo !== "") {
-        url += `&type_2=Comprimento&value_2=${filterTwo}`;
-      }
-    } else {
-      if (filterTwo !== "") {
-        url += `?type_2=Comprimento&value_2=${filterTwo}`;
-      }
-    }
-
-    if (filterThree !== "") {
-      url += `?type_1=Diametro&value_1=${filterThree}`;
-    }
-
+    let url = getURL();
     url += `&page=${currentPage + 1}`;
 
-    fetch(url)
-      .then((result) => result.json())
-      .then((data) => {
-        if (data.Variants.length > 0) {
-          const { Variants } = data;
-          const urls = [];
-          const productsFiltered = [];
-          const prods = [];
-          setProductsList(Variants);
-          console.log(Variants);
+    if (validation()) {
+      fetch(url)
+        .then((result) => result.json())
+        .then((data) => {
+          if (data.Variants.length > 0) {
+            const { Variants } = data;
+            const prods = getProductList(Variants);
+            const urls = getParentsURLS(prods);
+            setProductsList(Variants);
 
-          Variants.forEach((variant) => {
-            let item = {};
-            item.prod_id = variant.Variant.product_id;
-            item.img = variant.Variant.VariantImage[0]?.https;
-            item.name = "";
-            item.url = variant.Variant.url.https;
-            prods.push(item);
-          });
-
-          prods.forEach((prod) => {
-            urls.push(TRAY_URL + "/" + prod.prod_id);
-          });
-
-          Promise.all(
-            urls.map((url) =>
-              fetch(url).then((result) => {
-                return result.json();
-              })
-            )
-          ).then((data) => {
-            data.forEach((prod) => {
-              prods.forEach((p) => {
-                // console.log(prod);
-                if (p.prod_id === prod.Product.id) {
-                  // console.log("achou");
-                  p.name = prod.Product.name;
-                }
+            Promise.all(
+              urls.map((url) =>
+                fetch(url).then((result) => {
+                  return result.json();
+                })
+              )
+            ).then((data) => {
+              data.forEach((prod) => {
+                prods.forEach((p) => {
+                  if (p.prod_id === prod.Product.id) {
+                    p.name = prod.Product.name;
+                  }
+                });
               });
+
+              setProductsList(prods);
+              setProductsList([...productsList, ...prods]);
+              setCurrentPage(currentPage + 1);
             });
-
-            console.log(prods);
-            setProductsList(prods);
-
-            setProductsList([...productsList, ...prods]);
-            setCurrentPage(currentPage + 1);
-          });
-        }
-      });
+          }
+        });
+    }
   };
 
-  console.log("yes");
-
-  console.log(productsList);
-  console.log(filterThree);
-
-  // useEffect(() => {
-  //   setFilterOne("");
-  //   setFilterTwo("");
-  //   console.log("Limpando 1 e 2");
-  // }, [filterThree]);
-
-  // useEffect(() => {
-  //   setFilterThree("");
-  //   console.log("Limpando 3");
-  // }, [filterOne, filterTwo]);
-
   return (
-    <div>
-      <h1>Lista de produtos</h1>
+    <Container>
+      <h1>Encontre Toalhas com o novo filtro</h1>
+      <div>
+        Selecione as dimensões ou marque filtrar toalhas redondas para pesquisar
+        por diâmetro
+      </div>
       <Filter
         onChangeFirst={(e) => {
           setFilterOne(e.target.value);
-          setFilterThree('');
+          setFilterThree("");
+          setCurrentPage(1);
         }}
         onChangeSeccond={(e) => {
-          setFilterTwo(e.target.value)
-          setFilterThree('');
+          setFilterTwo(e.target.value);
+          setFilterThree("");
+          setCurrentPage(1);
         }}
         onChangeThird={(e) => {
-          setFilterThree(e.target.value)
-          setFilterOne('');
-          setFilterTwo('');
+          setFilterThree(e.target.value);
+          setFilterOne("");
+          setFilterTwo("");
+          setCurrentPage(1);
         }}
+        onSubmit={fetchProducts}
       />
-      <button onClick={fetchProducts}>Fetch</button>
       {productsList.length}
       <ProductsStyles>
         {productsList.length > 0 &&
           productsList.map((item) => (
-            <Product imgSrc={item.img} name={item.name} url={item.url} />
+            <Product
+              imgSrc={item.img}
+              name={item.name}
+              url={item.url}
+              price={item.price}
+            />
           ))}
       </ProductsStyles>
       {productsList.length > 0 && <button onClick={loadMore}>Load More</button>}
-    </div>
+    </Container>
   );
 };
 

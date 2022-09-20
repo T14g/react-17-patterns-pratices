@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 
-const Filter = ({ onChangeFirst, onChangeSeccond, onChangeThird }) => {
+const Filter = ({
+  onChangeFirst,
+  onChangeSeccond,
+  onChangeThird,
+  onSubmit,
+}) => {
   const [redondas, setRedondas] = useState(false);
 
   return (
@@ -45,6 +50,7 @@ const Filter = ({ onChangeFirst, onChangeSeccond, onChangeThird }) => {
       )}
       <input type="checkbox" onChange={() => setRedondas(!redondas)} />
       Filtrar toalhas redondas
+      <button onClick={() => onSubmit()}>Fetch</button>
     </div>
   );
 };
