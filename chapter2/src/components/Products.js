@@ -160,7 +160,6 @@ const Products = () => {
         }}
         onSubmit={fetchProducts}
       />
-      {productsList.length}
       <ProductsStyles>
         {productsList.length > 0 &&
           productsList.map((item) => (
@@ -172,7 +171,7 @@ const Products = () => {
             />
           ))}
       </ProductsStyles>
-      {productsList.length > 0 && <button onClick={loadMore}>Load More</button>}
+      {productsList.length > 0 && <button onClick={loadMore}>Carregar mais</button>}
     </Container>
   );
 };
