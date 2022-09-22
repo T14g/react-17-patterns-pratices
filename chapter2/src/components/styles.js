@@ -19,17 +19,33 @@ export const ProductsStyles = styled.div`
   justify-content: center;
   max-width: 1000px;
   margin: 0 auto;
+  height: 600px;
+  overflow: scroll;
 `;
 
 export const ProductStyles = styled.div`
-  width: 300px;
+  width: 210px;
   font-size: 14px;
   text-align: center;
   padding: 15px;
 
-  img {
-    width: 100%;
-    height: 200px;
+  a {
+    color: #8e264e;
+    text-decoration: none;
+    
+    img {
+      width: 200px;
+      height: 150px;
+    }
+
+    .name {
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    .price {
+      font-weight: 600;
+    }
   }
 `;
 
