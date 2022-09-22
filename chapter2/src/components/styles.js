@@ -53,5 +53,10 @@ export const FilterStyles = styled.div`
     max-width: 150px;
     height: 30px;
     border: none;
+
+    &:hover {
+      cursor: pointer;
+      opacity: 0.8;
+    }
   }
 `;

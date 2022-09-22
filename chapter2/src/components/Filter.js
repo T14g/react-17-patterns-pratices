@@ -52,7 +52,7 @@ const Filter = ({
       )}
       <input type="checkbox" onChange={() => setRedondas(!redondas)} />
       <label>Filtrar toalhas redondas</label>
-      <button onClick={() => onSubmit()}>Fetch</button>
+      <button onClick={() => onSubmit()}>Buscar</button>
     </FilterStyles>
   );
 };

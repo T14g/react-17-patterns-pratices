@@ -11,6 +11,7 @@ const Products = () => {
   const [filterOne, setFilterOne] = useState("");
   const [filterTwo, setFilterTwo] = useState("");
   const [filterThree, setFilterThree] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const getURL = () => {
     let url = VARIANTS_URL;
@@ -63,6 +64,9 @@ const Products = () => {
   };
 
   const fetchProducts = () => {
+    setProductsList([]);
+    setLoading(true);
+
     if (validation()) {
       fetch(getURL())
         .then((result) => result.json())
@@ -87,8 +91,8 @@ const Products = () => {
               });
             });
 
-            console.log(prods);
             setProductsList(prods);
+            setLoading(false);
           });
         });
     } else {
@@ -108,7 +112,6 @@ const Products = () => {
             const { Variants } = data;
             const prods = getProductList(Variants);
             const urls = getParentsURLS(prods);
-            setProductsList(Variants);
 
             Promise.all(
               urls.map((url) =>
@@ -136,7 +139,7 @@ const Products = () => {
 
   return (
     <Container>
-      <h1>Encontre Toalhas com o novo filtro</h1>
+      <h1>Encontre Toalhas com o novo buscador</h1>
       <div>
         Selecione as dimensões ou marque filtrar toalhas redondas para pesquisar
         por diâmetro
@@ -171,7 +174,13 @@ const Products = () => {
             />
           ))}
       </ProductsStyles>
-      {productsList.length > 0 && <button onClick={loadMore}>Carregar mais</button>}
+
+      {loading && (
+        <div className="loading">Aguarde carregando resultados...</div>
+      )}
+      {productsList.length > 0 && (
+        <button onClick={loadMore}>Carregar mais</button>
+      )}
     </Container>
   );
 };
