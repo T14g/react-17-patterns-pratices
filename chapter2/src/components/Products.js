@@ -179,7 +179,9 @@ const Products = () => {
         <div className="loading">Aguarde carregando resultados...</div>
       )}
       {productsList.length > 0 && (
-        <button onClick={loadMore}>Carregar mais</button>
+        <button className="load-more" onClick={loadMore}>
+          Carregar mais
+        </button>
       )}
     </Container>
   );

@@ -11,6 +11,27 @@ export const Container = styled.div`
     width: 155px;
     margin-right: 10px;
   }
+
+  .load-more {
+    background-color: #8e264e;
+    border-radius: 40px;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 600;
+    text-transform: capitalize;
+    transition: all 0.2s ease-out;
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+    border: none;
+    margin: 15px auto;
+    display: block;
+
+    &:hover {
+      cursor: pointer;
+      opacity: 0.8;
+    }
+  }
 `;
 
 export const ProductsStyles = styled.div`
@@ -32,7 +53,7 @@ export const ProductStyles = styled.div`
   a {
     color: #8e264e;
     text-decoration: none;
-    
+
     img {
       width: 200px;
       height: 150px;
@@ -51,7 +72,7 @@ export const ProductStyles = styled.div`
 
 export const FilterStyles = styled.div`
   margin: 20px 0;
-  
+
   label {
     font-size: 18px;
     margin-right: 15px;
