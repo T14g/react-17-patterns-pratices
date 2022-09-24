@@ -42,6 +42,9 @@ export const ProductsStyles = styled.div`
   margin: 0 auto;
   height: 600px;
   overflow: scroll;
+  border-bottom: 1px #c6c6c6 solid;
+  border-top: 1px #c6c6c6 solid;
+  padding-bottom: 15px;
 `;
 
 export const ProductStyles = styled.div`
