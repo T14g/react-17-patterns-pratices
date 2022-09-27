@@ -24,6 +24,7 @@ const Filter = ({
             <option value="1\,80">1,80</option>
             <option value="1\,90">1,90</option>
             <option value="2\,00">2,00</option>
+            <option value="88\,00">88,00</option>
           </select>
           <select onChange={onChangeSeccond}>
             <option>Comprimento</option>
@@ -35,6 +36,7 @@ const Filter = ({
             <option value="1\,80">1,80</option>
             <option value="1\,90">1,90</option>
             <option value="2\,00">2,00</option>
+            <option value="88\,00">88,00</option>
           </select>
         </>
       ) : (

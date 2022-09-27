@@ -12,6 +12,7 @@ const Products = () => {
   const [filterTwo, setFilterTwo] = useState("");
   const [filterThree, setFilterThree] = useState("");
   const [loading, setLoading] = useState(false);
+  const [noResults, setNoResults] = useState(false);
 
   const getURL = () => {
     let url = VARIANTS_URL;
@@ -65,9 +66,11 @@ const Products = () => {
 
   const fetchProducts = () => {
     setProductsList([]);
-    setLoading(true);
 
     if (validation()) {
+      setLoading(true);
+      setNoResults(false);
+
       fetch(getURL())
         .then((result) => result.json())
         .then((data) => {
@@ -93,6 +96,10 @@ const Products = () => {
 
             setProductsList(prods);
             setLoading(false);
+
+            if (prods.length === 0) {
+              setNoResults(true);
+            }
           });
         });
     } else {
@@ -105,6 +112,8 @@ const Products = () => {
     url += `&page=${currentPage + 1}`;
 
     if (validation()) {
+      setLoading(true);
+
       fetch(url)
         .then((result) => result.json())
         .then((data) => {
@@ -131,6 +140,7 @@ const Products = () => {
               setProductsList(prods);
               setProductsList([...productsList, ...prods]);
               setCurrentPage(currentPage + 1);
+              setLoading(false);
             });
           }
         });
@@ -163,9 +173,9 @@ const Products = () => {
         }}
         onSubmit={fetchProducts}
       />
-      <ProductsStyles>
-        {productsList.length > 0 &&
-          productsList.map((item) => (
+      {productsList.length > 0 && (
+        <ProductsStyles>
+          {productsList.map((item) => (
             <Product
               imgSrc={item.img}
               name={item.name}
@@ -173,12 +183,19 @@ const Products = () => {
               price={item.price}
             />
           ))}
-      </ProductsStyles>
+        </ProductsStyles>
+      )}
 
       {loading && (
         <div className="loading">Aguarde carregando resultados...</div>
       )}
-      {productsList.length > 0 && (
+
+      {!loading && noResults && (
+        <div>
+          Nenhum resultado encontrado, entre novamente ou mude as opções.
+        </div>
+      )}
+      {productsList.length > 0 && !loading   && (
         <button className="load-more" onClick={loadMore}>
           Carregar mais
         </button>
