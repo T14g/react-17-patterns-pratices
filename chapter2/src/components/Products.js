@@ -48,6 +48,7 @@ const Products = () => {
       item.name = "";
       item.url = variant.Variant.url.https;
       item.price = variant.Variant.price;
+      item.available = "";
       prods.push(item);
     });
 
@@ -90,6 +91,7 @@ const Products = () => {
               prods.forEach((p) => {
                 if (p.prod_id === prod.Product.id) {
                   p.name = prod.Product.name;
+                  p.available = prod.Product.available;
                 }
               });
             });
@@ -133,6 +135,7 @@ const Products = () => {
                 prods.forEach((p) => {
                   if (p.prod_id === prod.Product.id) {
                     p.name = prod.Product.name;
+                    p.available = prod.Product.available;
                   }
                 });
               });
@@ -175,14 +178,17 @@ const Products = () => {
       />
       {productsList.length > 0 && (
         <ProductsStyles>
-          {productsList.map((item) => (
-            <Product
-              imgSrc={item.img}
-              name={item.name}
-              url={item.url}
-              price={item.price}
-            />
-          ))}
+          {productsList.map(
+            (item) =>
+              item.available !== "0" && (
+                <Product
+                  imgSrc={item.img}
+                  name={item.name}
+                  url={item.url}
+                  price={item.price}
+                />
+              )
+          )}
         </ProductsStyles>
       )}
 
@@ -195,7 +201,7 @@ const Products = () => {
           Nenhum resultado encontrado, entre novamente ou mude as opções.
         </div>
       )}
-      {productsList.length > 0 && !loading   && (
+      {productsList.length > 0 && !loading && (
         <button className="load-more" onClick={loadMore}>
           Carregar mais
         </button>
