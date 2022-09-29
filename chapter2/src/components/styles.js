@@ -31,6 +31,10 @@ export const Container = styled.div`
       cursor: pointer;
       opacity: 0.8;
     }
+
+    &:disabled {
+      background: gray;
+    }
   }
 `;
 
@@ -41,7 +45,7 @@ export const ProductsStyles = styled.div`
   max-width: 1000px;
   margin: 0 auto;
   height: 600px;
-  overflow: scroll;
+  overflow: auto;
   border-bottom: 1px #c6c6c6 solid;
   border-top: 1px #c6c6c6 solid;
   padding-bottom: 15px;
@@ -65,16 +69,52 @@ export const ProductStyles = styled.div`
     .name {
       max-width: 200px;
       margin: 0 auto;
+      font-size: 14px;
     }
 
     .price {
-      font-weight: 600;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .available {
+      font-weight: 800;
+      font-size: 18px;
+      color: rgb(52 44 47);
     }
   }
 `;
 
 export const FilterStyles = styled.div`
   margin: 20px 0;
+
+  @media (min-width: 731px) {
+    display: flex;
+  }
+
+  select {
+    @media (max-width: 730px) {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+
+  .block-radio {
+    padding-top: 5px;
+
+    @media (max-width: 730px) {
+      padding-top: 0;
+      margin-bottom: 15px;
+    }
+
+    input {
+      @media (max-width: 730px) {
+        margin: 0;
+        margin-right: 5px;
+      }
+    }
+  }
 
   label {
     font-size: 18px;
@@ -97,6 +137,13 @@ export const FilterStyles = styled.div`
     &:hover {
       cursor: pointer;
       opacity: 0.8;
+    }
+
+    @media (max-width: 730px) {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      max-width: initial;
     }
   }
 `;

@@ -12,6 +12,7 @@ const Products = () => {
   const [filterTwo, setFilterTwo] = useState("");
   const [filterThree, setFilterThree] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [noResults, setNoResults] = useState(false);
 
   const getURL = () => {
@@ -65,8 +66,20 @@ const Products = () => {
     return urls;
   };
 
+  const setParentData = (data, prods) => {
+    data.forEach((prod) => {
+      prods.forEach((p) => {
+        if (p.prod_id === prod.Product.id) {
+          p.name = prod.Product.name;
+          p.available = prod.Product.available;
+        }
+      });
+    });
+  };
+
   const fetchProducts = () => {
     setProductsList([]);
+    setIsLoadingMore(false);
 
     if (validation()) {
       setLoading(true);
@@ -87,15 +100,7 @@ const Products = () => {
               })
             )
           ).then((data) => {
-            data.forEach((prod) => {
-              prods.forEach((p) => {
-                if (p.prod_id === prod.Product.id) {
-                  p.name = prod.Product.name;
-                  p.available = prod.Product.available;
-                }
-              });
-            });
-
+            setParentData(data, prods);
             setProductsList(prods);
             setLoading(false);
 
@@ -114,7 +119,7 @@ const Products = () => {
     url += `&page=${currentPage + 1}`;
 
     if (validation()) {
-      setLoading(true);
+      setIsLoadingMore(true);
 
       fetch(url)
         .then((result) => result.json())
@@ -131,20 +136,14 @@ const Products = () => {
                 })
               )
             ).then((data) => {
-              data.forEach((prod) => {
-                prods.forEach((p) => {
-                  if (p.prod_id === prod.Product.id) {
-                    p.name = prod.Product.name;
-                    p.available = prod.Product.available;
-                  }
-                });
-              });
-
+              setParentData(data, prods);
               setProductsList(prods);
               setProductsList([...productsList, ...prods]);
               setCurrentPage(currentPage + 1);
-              setLoading(false);
+              setIsLoadingMore(false);
             });
+          } else {
+            setIsLoadingMore(false);
           }
         });
     }
@@ -176,23 +175,24 @@ const Products = () => {
         }}
         onSubmit={fetchProducts}
       />
-      {productsList.length > 0 && (
+      {productsList.length > 0 && !loading && (
         <ProductsStyles>
           {productsList.map(
             (item) =>
-              item.available !== "0" && (
+              item.img && (
                 <Product
                   imgSrc={item.img}
                   name={item.name}
                   url={item.url}
                   price={item.price}
+                  available={item.available}
                 />
               )
           )}
         </ProductsStyles>
       )}
 
-      {loading && (
+      {loading && !isLoadingMore && (
         <div className="loading">Aguarde carregando resultados...</div>
       )}
 
@@ -201,9 +201,14 @@ const Products = () => {
           Nenhum resultado encontrado, entre novamente ou mude as opções.
         </div>
       )}
+
       {productsList.length > 0 && !loading && (
-        <button className="load-more" onClick={loadMore}>
-          Carregar mais
+        <button
+          className="load-more"
+          onClick={loadMore}
+          disabled={isLoadingMore}
+        >
+          {isLoadingMore ? "Aguarde..." : "Carregar mais"}
         </button>
       )}
     </Container>

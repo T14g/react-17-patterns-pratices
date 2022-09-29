@@ -52,8 +52,10 @@ const Filter = ({
           <option value="2\,00">2,00</option>
         </select>
       )}
-      <input type="checkbox" onChange={() => setRedondas(!redondas)} />
-      <label>Filtrar toalhas redondas</label>
+      <div className="block-radio">
+        <input type="checkbox" onChange={() => setRedondas(!redondas)} />
+        <label>Filtrar toalhas redondas</label>
+      </div>
       <button onClick={() => onSubmit()}>Buscar</button>
     </FilterStyles>
   );
