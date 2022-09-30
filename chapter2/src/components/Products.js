@@ -144,6 +144,7 @@ const Products = () => {
             });
           } else {
             setIsLoadingMore(false);
+            alert("Sem mais resultados.");
           }
         });
     }
