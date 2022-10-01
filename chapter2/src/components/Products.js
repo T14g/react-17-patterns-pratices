@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { TRAY_URL, VARIANTS_URL } from "../../config";
+import { VARIANTS_URL } from "../../config";
 import Filter from "./Filter";
 import Product from "../components/Product";
+import { getProductList, getParentsURLS, setParentData } from "./helpers";
 
 import { ProductsStyles, Container } from "./styles";
 
@@ -38,44 +39,6 @@ const Products = () => {
 
   const validation = () =>
     filterOne !== "" || filterTwo !== "" || filterThree !== "";
-
-  const getProductList = (data) => {
-    const prods = [];
-
-    data.forEach((variant) => {
-      let item = {};
-      item.prod_id = variant.Variant.product_id;
-      item.img = variant.Variant.VariantImage[0]?.https;
-      item.name = "";
-      item.url = variant.Variant.url.https;
-      item.price = variant.Variant.price;
-      item.available = "";
-      prods.push(item);
-    });
-
-    return prods;
-  };
-
-  const getParentsURLS = (data) => {
-    const urls = [];
-
-    data.forEach((prod) => {
-      urls.push(TRAY_URL + "/" + prod.prod_id);
-    });
-
-    return urls;
-  };
-
-  const setParentData = (data, prods) => {
-    data.forEach((prod) => {
-      prods.forEach((p) => {
-        if (p.prod_id === prod.Product.id) {
-          p.name = prod.Product.name;
-          p.available = prod.Product.available;
-        }
-      });
-    });
-  };
 
   const fetchProducts = () => {
     setProductsList([]);
@@ -138,7 +101,6 @@ const Products = () => {
             ).then((data) => {
               setParentData(data, prods);
               setProductsList(prods);
-              setProductsList([...productsList, ...prods]);
               setCurrentPage(currentPage + 1);
               setIsLoadingMore(false);
             });
@@ -199,7 +161,7 @@ const Products = () => {
 
       {!loading && noResults && (
         <div>
-          Nenhum resultado encontrado, entre novamente ou mude as opções.
+          Nenhum resultado encontrado, tente novamente ou mude as opções.
         </div>
       )}
 
