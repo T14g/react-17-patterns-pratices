@@ -139,6 +139,15 @@ export const FilterStyles = styled.div`
       opacity: 0.8;
     }
 
+    &:disabled {
+      background: #c7c7c7;
+
+      &:hover {
+        cursor: initial;
+        opacity: 1;
+      }
+    }
+
     @media (max-width: 730px) {
       display: block;
       width: 100%;

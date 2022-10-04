@@ -16,6 +16,9 @@ const Products = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [noResults, setNoResults] = useState(false);
 
+  const isFilterEnabled = () =>
+    filterOne !== "" || filterTwo !== "" || filterThree !== "";
+
   const getURL = () => {
     let url = VARIANTS_URL;
     if (filterThree !== "") {
@@ -137,6 +140,7 @@ const Products = () => {
           setCurrentPage(1);
         }}
         onSubmit={fetchProducts}
+        disabled={isFilterEnabled()}
       />
       {productsList.length > 0 && !loading && (
         <ProductsStyles>
@@ -176,6 +180,6 @@ const Products = () => {
       )}
     </Container>
   );
-};   
+};
 
 export default Products;

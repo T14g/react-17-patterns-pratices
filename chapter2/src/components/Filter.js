@@ -10,7 +10,7 @@ const Filter = ({
   disabled,
 }) => {
   const [redondas, setRedondas] = useState(false);
-
+  
   return (
     <FilterStyles>
       {!redondas ? (
@@ -57,7 +57,7 @@ const Filter = ({
         <input type="checkbox" onChange={() => setRedondas(!redondas)} />
         <label>Filtrar toalhas redondas</label>
       </div>
-      <button onClick={() => onSubmit()} disabled>
+      <button onClick={() => onSubmit()} disabled={!disabled}>
         Buscar
       </button>
     </FilterStyles>
