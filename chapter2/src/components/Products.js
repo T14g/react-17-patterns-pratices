@@ -15,6 +15,7 @@ const Products = () => {
   const [loading, setLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  const [requestsCount, setRequestsCount] = useState(0);
 
   const isFilterEnabled = () =>
     filterOne !== "" || filterTwo !== "" || filterThree !== "";
@@ -44,6 +45,11 @@ const Products = () => {
     filterOne !== "" || filterTwo !== "" || filterThree !== "";
 
   const fetchProducts = () => {
+    if(requestsCount >=150) {
+      alert("Por favor aguarde um instante e clique novamente");
+      return;
+    }
+
     setProductsList([]);
     setIsLoadingMore(false);
 
@@ -58,6 +64,7 @@ const Products = () => {
           const prods = getProductList(Variants);
           const urls = getParentsURLS(prods);
           setProductsList(Variants);
+          setRequestsCount(requestsCount + urls.length + 1);
 
           Promise.all(
             urls.map((url) =>
@@ -81,6 +88,11 @@ const Products = () => {
   };
 
   const loadMore = () => {
+    if(requestsCount >=150) {
+      alert("Por favor aguarde um instante e clique novamente");
+      return;
+    }
+    
     let url = getURL();
     url += `&page=${currentPage + 1}`;
 
@@ -94,6 +106,7 @@ const Products = () => {
             const { Variants } = data;
             const prods = getProductList(Variants);
             const urls = getParentsURLS(prods);
+            setRequestsCount(requestsCount + urls.length + 1);
 
             Promise.all(
               urls.map((url) =>
@@ -115,8 +128,20 @@ const Products = () => {
     }
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("Clearing count");
+      setRequestsCount(0);
+    }, 60000);
+ 
+    // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+    return () => clearInterval(interval); 
+  }, []);
+
+  console.log(requestsCount);
+
   return (
-    <Container>
+    <Container className="wrapper-app">
       <h1>Encontre Toalhas com o novo buscador</h1>
       <div>
         Selecione as dimensões ou marque filtrar toalhas redondas para pesquisar
@@ -141,6 +166,11 @@ const Products = () => {
         }}
         onSubmit={fetchProducts}
         disabled={isFilterEnabled()}
+        clearFilters={() => {
+          setFilterOne("");
+          setFilterTwo("");
+          setFilterThree("");
+        }}
       />
       {productsList.length > 0 && !loading && (
         <ProductsStyles>
