@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { medidasCL, medidasD } from "./app-config";
 
 import { FilterStyles } from "./styles";
 
@@ -8,53 +9,40 @@ const Filter = ({
   onChangeThird,
   onSubmit,
   disabled,
+  clearFilters
 }) => {
   const [redondas, setRedondas] = useState(false);
-  
+
   return (
-    <FilterStyles>
+    <FilterStyles className="filtro-wrapper">
       {!redondas ? (
         <>
           <select onChange={onChangeFirst}>
-            <option>Largura</option>
-            <option value="1\,30">1,30</option>
-            <option value="1\,40">1,40</option>
-            <option value="1\,50">1,50</option>
-            <option value="1\,60">1,160</option>
-            <option value="1\,70">1,170</option>
-            <option value="1\,80">1,80</option>
-            <option value="1\,90">1,90</option>
-            <option value="2\,00">2,00</option>
-            <option value="88\,00">88,00</option>
+            <option value="">Largura</option>
+            {medidasCL.map((op) => (
+              <option value={op.value}>{op.text}</option>
+            ))}
           </select>
           <select onChange={onChangeSeccond}>
-            <option>Comprimento</option>
-            <option value="1\,30">1,30</option>
-            <option value="1\,40">1,40</option>
-            <option value="1\,50">1,50</option>
-            <option value="1\,60">1,160</option>
-            <option value="1\,70">1,170</option>
-            <option value="1\,80">1,80</option>
-            <option value="1\,90">1,90</option>
-            <option value="2\,00">2,00</option>
-            <option value="88\,00">88,00</option>
+            <option value="">Comprimento</option>
+            {medidasCL.map((op) => (
+              <option value={op.value}>{op.text}</option>
+            ))}
           </select>
         </>
       ) : (
         <select onChange={onChangeThird}>
-          <option>Diâmetro</option>
-          <option value="1\,30">1,30</option>
-          <option value="1\,40">1,40</option>
-          <option value="1\,50">1,50</option>
-          <option value="1\,60">1,160</option>
-          <option value="1\,70">1,170</option>
-          <option value="1\,80">1,80</option>
-          <option value="1\,90">1,90</option>
-          <option value="2\,00">2,00</option>
+          <option value="">Diâmetro</option>
+          {medidasD.map((op) => (
+            <option value={op.value}>{op.text}</option>
+          ))}
         </select>
       )}
       <div className="block-radio">
-        <input type="checkbox" onChange={() => setRedondas(!redondas)} />
+        <input type="checkbox" onChange={() => {
+          setRedondas(!redondas);
+          clearFilters();
+        }} />
         <label>Filtrar toalhas redondas</label>
       </div>
       <button onClick={() => onSubmit()} disabled={!disabled}>
