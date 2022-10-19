@@ -116,7 +116,7 @@ const Products = () => {
               )
             ).then((data) => {
               setParentData(data, prods);
-              setProductsList(prods);
+              setProductsList([...productsList, ... prods]);
               setCurrentPage(currentPage + 1);
               setIsLoadingMore(false);
             });
@@ -130,7 +130,7 @@ const Products = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log("Clearing count");
+      // console.log("Clearing count");
       setRequestsCount(0);
     }, 60000);
  
@@ -138,16 +138,16 @@ const Products = () => {
     return () => clearInterval(interval); 
   }, []);
 
-  console.log(requestsCount);
+  // console.log(requestsCount);
 
   return (
     <Container className="wrapper-app">
-      <h1>Encontre Toalhas com o novo buscador</h1>
-      <div>
+      <h1 className="filter-title">Encontre Toalhas com o Novo Buscador</h1>
+      <div className="filter-description">
         Selecione as dimensões ou marque filtrar toalhas redondas para pesquisar
-        por diâmetro
+        por di&acirc;metro
       </div>
-      <Filter
+      <Filter 
         onChangeFirst={(e) => {
           setFilterOne(e.target.value);
           setFilterThree("");
@@ -173,7 +173,7 @@ const Products = () => {
         }}
       />
       {productsList.length > 0 && !loading && (
-        <ProductsStyles>
+        <ProductsStyles className="filter-products-wrapper">
           {productsList.map(
             (item) =>
               item.img && (
@@ -194,8 +194,8 @@ const Products = () => {
       )}
 
       {!loading && noResults && (
-        <div>
-          Nenhum resultado encontrado, tente novamente ou mude as opções.
+        <div className="no-results-msg">
+          Nenhum resultado encontrado, tente novamente ou mude as opç&otilde;es.
         </div>
       )}
 

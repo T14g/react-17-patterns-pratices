@@ -39,14 +39,14 @@ const Filter = ({
         </select>
       )}
       <div className="block-radio">
-        <input type="checkbox" onChange={() => {
+        <input type="checkbox" nam="checkboxRedondas" id="checkboxRedondas" onChange={() => {
           setRedondas(!redondas);
           clearFilters();
         }} />
-        <label>Filtrar toalhas redondas</label>
+        <label htmlFor="checkboxRedondas">Filtrar toalhas redondas</label>
       </div>
       <button onClick={() => onSubmit()} disabled={!disabled}>
-        Buscar
+        Buscar 
       </button>
     </FilterStyles>
   );

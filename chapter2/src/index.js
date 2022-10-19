@@ -7,5 +7,5 @@ ReactDOM.render(
     <Products/>
   </> 
   ,
-  document.getElementById('root')
+  document.getElementById('filtroNovoReact')
 );
