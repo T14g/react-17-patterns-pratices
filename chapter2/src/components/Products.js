@@ -187,7 +187,7 @@ const Products = () => {
               )
           )}
         </ProductsStyles>
-      )}
+      )}  
 
       {loading && !isLoadingMore && (
         <div className="loading">Aguarde carregando resultados...</div>
